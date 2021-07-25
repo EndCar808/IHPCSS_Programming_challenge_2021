@@ -78,6 +78,9 @@ $(BIN_DIRECTORY)/f/gpu_small: $(SRC_DIRECTORY)/f/util.F90 $(SRC_DIRECTORY)/f/gpu
 
 clean:
 	@if [ -d $(BIN_DIRECTORY) ]; then rm -rf $(BIN_DIRECTORY); fi;
+	rm -f *.o
+	rm -f *.mod
+	rm -f *.txt
 
 clean_cpu:
 	@if [ -d $(BIN_DIRECTORY) ]; then rm -rf $(BIN_DIRECTORY)/c/cpu* $(BIN_DIRECTORY)/f/cpu*; fi;

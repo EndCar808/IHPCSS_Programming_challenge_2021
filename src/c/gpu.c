@@ -66,9 +66,13 @@ int main(int argc, char* argv[])
 	// The master MPI process will read a chunk from the file, send it to the corresponding MPI process and repeat until all chunks are read.
 	if(my_rank == MASTER_PROCESS_RANK)
 	{
-		initialise_temperatures(all_temperatures);
+		// EC: For SMALL -> sets every 500th column (including col 0) to MAX_TEMPERATURE = 50.0
+		// 	   For BIG   -> sets a 'cross' centered in the middle row and col of the dataset to MAX_TEMPERATURE = 50.0
+		// 	   				so that the corners are 0.0.
+		initialise_temperatures(all_temperatures); 
 	}
 
+	// Syncs all processes
 	MPI_Barrier(MPI_COMM_WORLD);
 
 	///////////////////////////////////////////
@@ -85,6 +89,8 @@ int main(int argc, char* argv[])
 	double total_time_so_far = 0.0;
 	double start_time = MPI_Wtime();
 
+	// NOTE: THis is a comms se4ction. Need to be done on the CPU - using an update
+	// 
 	if(my_rank == MASTER_PROCESS_RANK)
 	{
 		for(int i = 0; i < comm_size; i++)
@@ -137,8 +143,10 @@ int main(int argc, char* argv[])
 	int iteration_count = 0;
 	/// Maximum temperature change observed across all MPI processes
 	double global_temperature_change;
+
 	/// Maximum temperature change for us
 	double my_temperature_change; 
+	
 	/// The last snapshot made
 	double snapshot[ROWS][COLUMNS];
 
@@ -149,7 +157,8 @@ int main(int argc, char* argv[])
 		// ////////////////////////////////////////
 		// -- SUBTASK 1: EXCHANGE GHOST CELLS -- //
 		// ////////////////////////////////////////
-
+		// NOTE: This is a comms section should be done on the CPU - will need an update
+		// NOTE: Not even sure how this works but ok!!
 		// Send data to up neighbour for its ghost cells. If my up_neighbour_rank is MPI_PROC_NULL, this MPI_Ssend will do nothing.
 		MPI_Ssend(&temperatures[1][0], COLUMNS_PER_MPI_PROCESS, MPI_DOUBLE, up_neighbour_rank, 0, MPI_COMM_WORLD);
 
@@ -165,6 +174,7 @@ int main(int argc, char* argv[])
 		/////////////////////////////////////////////
 		// -- SUBTASK 2: PROPAGATE TEMPERATURES -- //
 		/////////////////////////////////////////////
+		/// NOTE: THis is a compute section should be done on the GPU - there is dependence - so how is best to do it?
 		for(int i = 1; i <= ROWS_PER_MPI_PROCESS; i++)
 		{
 			// Process the cell at the first column, which has no left neighbour
@@ -197,6 +207,8 @@ int main(int argc, char* argv[])
 		///////////////////////////////////////////////////////
 		// -- SUBTASK 3: CALCULATE MAX TEMPERATURE CHANGE -- //
 		///////////////////////////////////////////////////////
+		/// NOTE: This is a compute section should be done on the GPU
+		/// NOTE: Using a reduction
 		my_temperature_change = 0.0;
 		for(int i = 1; i <= ROWS_PER_MPI_PROCESS; i++)
 		{
@@ -209,6 +221,8 @@ int main(int argc, char* argv[])
 		//////////////////////////////////////////////////////////
 		// -- SUBTASK 4: FIND MAX TEMPERATURE CHANGE OVERALL -- //
 		//////////////////////////////////////////////////////////
+		// NOTE: this is a comms section should be done on the CPU -> update
+		// NOTE: Looks like another collective comms should be better
 		if(my_rank != MASTER_PROCESS_RANK)
 		{
 			// Send my temperature delta to the master MPI process
@@ -249,6 +263,7 @@ int main(int argc, char* argv[])
 		//////////////////////////////////////////////////
 		// -- SUBTASK 5: UPDATE LAST ITERATION ARRAY -- //
 		//////////////////////////////////////////////////
+		/// NOTE: This is a compute section should be done on the gpu
 		for(int i = 1; i <= ROWS_PER_MPI_PROCESS; i++)
 		{
 			for(int j = 0; j < COLUMNS_PER_MPI_PROCESS; j++)
@@ -260,6 +275,8 @@ int main(int argc, char* argv[])
 		///////////////////////////////////
 		// -- SUBTASK 6: GET SNAPSHOT -- //
 		///////////////////////////////////
+		/// NOTE: This is a comms section -> should be done on the CPU - need to update
+		/// NOTE: Looks like a collective comm would be better 
 		if(iteration_count % SNAPSHOT_INTERVAL == 0)
 		{
 			if(my_rank == MASTER_PROCESS_RANK)
