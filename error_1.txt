@@ -1,0 +1,72 @@
+[v010.ib.bridges2.psc.edu:72041] MCW rank 0 is not bound (or bound to all available processors)
+[v010.ib.bridges2.psc.edu:72041] MCW rank 1 is not bound (or bound to all available processors)
+libcupti.so not found
+libcupti.so not found
+
+Accelerator Kernel Timing data
+
+Accelerator Kernel Timing data
+/jet/home/ecarroll/MyCode_progChal/src/c/gpu.c
+  main  NVIDIA  devicenum=0
+    time(us): 586,826
+    139: compute region reached 1 time
+        144: kernel launched 1 time
+            grid: [1024]  block: [128]
+            elapsed time(us): total=125 max=125 min=125 avg=125
+    139: data region reached 2 times
+        139: data copyin transfers: 2
+             device time(us): total=203 max=108 min=95 avg=101
+    171: update directive reached 3048 times
+        171: data copyout transfers: 6096
+             device time(us): total=535,373 max=181 min=86 avg=87
+    187: compute region reached 3048 times
+        193: kernel launched 3048 times
+            grid: [256]  block: [128]
+            elapsed time(us): total=477,564 max=841 min=20 avg=156
+    252: compute region reached 3048 times
+        256: kernel launched 3048 times
+            grid: [1024]  block: [128]
+            elapsed time(us): total=534,803 max=206 min=15 avg=175
+        256: reduction kernel launched 3048 times
+            grid: [1]  block: [256]
+            elapsed time(us): total=537,103 max=1,491 min=14 avg=176
+    252: data region reached 6096 times
+        252: data copyin transfers: 3048
+             device time(us): total=10,865 max=16 min=3 avg=3
+        261: data copyout transfers: 3048
+             device time(us): total=29,656 max=25 min=6 avg=9
+    328: update directive reached 122 times
+        328: data copyout transfers: 122
+             device time(us): total=10,729 max=94 min=87 avg=87
+/jet/home/ecarroll/MyCode_progChal/src/c/gpu.c
+  main  NVIDIA  devicenum=0
+    time(us): 617,808
+    139: compute region reached 1 time
+        144: kernel launched 1 time
+            grid: [1024]  block: [128]
+            elapsed time(us): total=129 max=129 min=129 avg=129
+    139: data region reached 2 times
+        139: data copyin transfers: 2
+             device time(us): total=196 max=102 min=94 avg=98
+    171: update directive reached 3048 times
+        171: data copyout transfers: 6096
+             device time(us): total=562,165 max=191 min=86 avg=92
+    187: compute region reached 3048 times
+        193: kernel launched 3048 times
+            grid: [256]  block: [128]
+            elapsed time(us): total=301,604 max=610 min=20 avg=98
+    252: compute region reached 3048 times
+        256: kernel launched 3048 times
+            grid: [1024]  block: [128]
+            elapsed time(us): total=526,287 max=205 min=15 avg=172
+        256: reduction kernel launched 3048 times
+            grid: [1]  block: [256]
+            elapsed time(us): total=537,598 max=675 min=14 avg=176
+    252: data region reached 6096 times
+        252: data copyin transfers: 3048
+             device time(us): total=10,901 max=16 min=3 avg=3
+        261: data copyout transfers: 3048
+             device time(us): total=33,924 max=24 min=6 avg=11
+    328: update directive reached 122 times
+        328: data copyout transfers: 122
+             device time(us): total=10,622 max=93 min=86 avg=87

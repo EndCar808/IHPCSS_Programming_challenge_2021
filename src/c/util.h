@@ -24,7 +24,7 @@ void initialise_temperatures(double temperatures[ROWS][COLUMNS])
 				if(i >= (MID_ROWS - THICKNESS/2) && i <= (MID_ROWS + THICKNESS/2) &&
 				   j >= (MID_COLUMNS - THICKNESS/2) && j <= (MID_COLUMNS + THICKNESS/2))
 				{
-					temperatures[i][j] = MAX_TEMPERATURE;
+					temperatures[i][j] = MAX_TEMPERATURE / 2.0;
 				}
 				else
 				{
@@ -38,6 +38,12 @@ void initialise_temperatures(double temperatures[ROWS][COLUMNS])
 			for(int j = 0; j < COLUMNS; j++)
 			{
 				temperatures[i][j] = (j % 100 == 0) ? MAX_TEMPERATURE : 0.0;
+				// if(i == 0 && j == 0) {
+				// 	temperatures[i][j] = 50.0;
+				// }
+				// else {
+				// 	temperatures[i][j] = 0.0;
+				// }
 			}
 		}
 	#endif
